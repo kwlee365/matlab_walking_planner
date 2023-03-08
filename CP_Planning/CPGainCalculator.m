@@ -8,14 +8,16 @@ time = i*dt;
 
 
     if(CP_trigger == 1)     % CPS control
-        if (rem(time, t_step) == 0)
+        if (and(rem(time, t_step) == 0,time < 7))
             dT(i,1) = t_step;
             j = 0;
-        else
+        elseif(time < 7)
             dT(i,1) = t_step - j;
             if(dT(i,1) <= t_lim)
                 dT(i,1) = t_lim;
             end
+        else
+            dT(i,1) = t_lim;
         end 
     elseif (CP_trigger == 0)    % CPT contrl
         dT(i,1) = t_lim;
@@ -26,5 +28,11 @@ j=j+dt;
 end
 
 b(:,1) = exp(w*dT(:,1));
+
+% figure()
+% plot([1:sim_tick]*dt, dT(1:sim_tick,1))
+% title('dT')
+% grid on
+
 end
 
