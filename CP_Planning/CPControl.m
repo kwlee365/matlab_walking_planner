@@ -6,9 +6,17 @@ com_ = zeros(sim_tick,2);
 
 for i = 1:1:sim_tick
 
+    % Pertubation
+    if(i == 1100)
+        cp_(i,1) = cp_(i,1) - 0.1;
+        cp_(i,2) = cp_(i,2) + 0.1;
+    end
+    
+    
     if(CP_trigger == 1)     % CPS control
         [cp_(i+1,:), zmp_(i+1,:), com_(i+1,:)] = CPEndofStepControl(dt, b(i,1), w, cp_(i,:), zmp_(i,:), com_(i,:), cp_desired_(i,:));
     elseif(CP_trigger == 0)     % CPT control   
         [cp_(i+1,:), zmp_(i+1,:), com_(i+1,:)] = CPTrackingControl(dt, b(i,1), w, cp_(i,:), zmp_(i,:), com_(i,:), cp_desired_(i,:));
     end
+
 end

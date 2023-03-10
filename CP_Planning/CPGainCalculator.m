@@ -29,10 +29,10 @@ end
 
 b(:,1) = exp(w*dT(:,1));
 
-% figure()
-% plot([1:sim_tick]*dt, dT(1:sim_tick,1))
-% title('dT')
-% grid on
+figure()
+plot([1:sim_tick]*dt, dT(1:sim_tick,1))
+title('dT')
+grid on
 
 end
 

@@ -39,7 +39,7 @@ for i = 1:1:sim_tick + 100
     end
 
     if(and(rem(time, t_step) == 0.0, time < sim_tick*dt))
-        time_offset=time_offset+t_step + dt;
+        time_offset=time_offset+t_step;
     end
 
     if(time < 7)
@@ -61,15 +61,16 @@ elseif(CP_trigger == 0)
     for j = 1:1:sim_tick
             cp_desired_(j,:) = cp_ref(j + 10,:);    % dT * hz_ = 10;
     end
-%     figure()
-%     plot([1:sim_tick]*dt, zmp_desired_(1:sim_tick,1), [1:sim_tick]*dt, cp_eos(1:sim_tick,1), [1:sim_tick]*dt, cp_desired_(1:sim_tick,1))
-%     legend('zmp', 'cp eos', 'cp des')
-%     title('X dir')
-%     figure()
-%     plot([1:sim_tick]*dt, zmp_desired_(1:sim_tick,2), [1:sim_tick]*dt, cp_eos(1:sim_tick,2), [1:sim_tick]*dt, cp_desired_(1:sim_tick,2))
-%     legend('zmp', 'cp eos', 'cp des')
-%     title('Y dir')
 end
+
+% figure()
+% plot([1:sim_tick]*dt, zmp_desired_(1:sim_tick,1), [1:sim_tick]*dt, cp_eos(1:sim_tick,1), [1:sim_tick]*dt, cp_desired_(1:sim_tick,1))
+% legend('zmp', 'cp eos', 'cp des')
+% title('X dir')
+% figure()
+% plot([1:sim_tick]*dt, zmp_desired_(1:sim_tick,2), [1:sim_tick]*dt, cp_eos(1:sim_tick,2), [1:sim_tick]*dt, cp_desired_(1:sim_tick,2))
+% legend('zmp', 'cp eos', 'cp des')
+% title('Y dir')
 
 %% CPT
 

@@ -1,8 +1,6 @@
 clc
-% close all
+close all
 clear all
-
-%% Preview control
 
 %% Parameters
 dt = 0.005;             % [s] : sampling time
@@ -19,7 +17,7 @@ CPS = logical(1);       % CP end of step control
 CPT = logical(0);       % CP tracking control
 
 %% CPS/CPT
-bool_ = CPT
+bool_ = CPS
 
 b = CPGainCalculator(dt, sim_tick, w, t_step, t_lim, bool_);
 cp_desired_ = CPDesiredGenerator(dt, sim_tick, w, b, t_step, 0.2, 0.1, bool_);
