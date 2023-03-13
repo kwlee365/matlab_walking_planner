@@ -27,22 +27,18 @@ foot_length = 0.15;
 
 preview_window = 3*step_time*hz;   % next three desired VRPs
 
-DCDS = 0;                  % Discontinuous Double Support
-CDS = 1;                   % Continuous Double Support
-HT = 2;                    % Heel-To-Toe
+DCDS = logical(0);              % Discontinuous Double Support
+CDS = logical(1);               % Continuous Double Support
+HT = logical(2);                % Heel-To-Toe
 
 %% Planner
 
-bool_ = 2;
+bool_ = HT;
 
 if(or(bool_ == DCDS, bool_ == CDS))
-        [vrpRef] = VrpGenerator(dt,sim_tick,step_time,step_length, step_width, h);
-elseif(bool_==HT)
-        [vrpRef] = VrpHTGenerator(dt,sim_tick,step_time,step_length,step_width,foot_length, h);
-else
-        vrpRef = zeros(sim_tick + 600,3) ;
-end
-     
+
+[vrpRef] = VrpGenerator(dt,sim_tick,step_time,step_length, step_width, h);
+
 [com_desired, dcm_desired, vrp_desired, dcm_desired_dot] = DCM_MainPlanner(dt, sim_tick, preview_window, step_time, dsp_time, w, vrpRef, h, bool_);
 
 %% Plot

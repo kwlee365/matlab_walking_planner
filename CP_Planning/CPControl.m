@@ -6,7 +6,7 @@ com_ = zeros(sim_tick,2);
 
 for i = 1:1:sim_tick
 
-    % Pertubation
+    % Perturbation
     if(i == 1100)
         cp_(i,1) = cp_(i,1) - 0.1;
         cp_(i,2) = cp_(i,2) + 0.1;
