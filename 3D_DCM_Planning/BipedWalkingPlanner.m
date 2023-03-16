@@ -1,5 +1,5 @@
 clc
-close all
+% close all
 clear all
 
 %% 3D DCM Planner
@@ -48,29 +48,29 @@ end
 %% Plot
  
 figure()
-plot([1:sim_tick]*dt, dcm_desired(1:sim_tick,1), [1:sim_tick]*dt, vrpRef(1:sim_tick,1), [1:sim_tick]*dt, vrp_desired(1:sim_tick,1),[1:sim_tick]*dt, com_desired(1:sim_tick,1))
-legend('DCM', 'VRP ref', 'VRP des', 'COM')
+subplot(2,1,1)
+plot([1:sim_tick]*dt, dcm_desired(1:sim_tick,1), [1:sim_tick]*dt, vrp_desired(1:sim_tick,1),[1:sim_tick]*dt, com_desired(1:sim_tick,1))
+legend('DCM', 'VRP des', 'COM')
 title('X dir')
 grid on
-
-figure()
-plot([1:sim_tick]*dt, dcm_desired(1:sim_tick,2), [1:sim_tick]*dt, vrpRef(1:sim_tick,2), [1:sim_tick]*dt, vrp_desired(1:sim_tick,2),[1:sim_tick]*dt, com_desired(1:sim_tick,2))
-legend('DCM', 'VRP ref', 'VRP des', 'COM')
+subplot(2,1,2)
+plot([1:sim_tick]*dt, dcm_desired(1:sim_tick,2), [1:sim_tick]*dt, vrp_desired(1:sim_tick,2),[1:sim_tick]*dt, com_desired(1:sim_tick,2))
+legend('DCM', 'VRP des', 'COM')
 title('Y dir')
 grid on
 
-figure()
-plot([1:sim_tick]*dt, dcm_desired(1:sim_tick,3), [1:sim_tick]*dt, vrpRef(1:sim_tick,3), [1:sim_tick]*dt, vrp_desired(1:sim_tick,3),[1:sim_tick]*dt, com_desired(1:sim_tick,3))
-legend('DCM', 'VRP ref', 'VRP des', 'COM')
-title('Z dir')
-grid on
+% figure()
+% plot([1:sim_tick]*dt, dcm_desired(1:sim_tick,3), [1:sim_tick]*dt, vrp_desired(1:sim_tick,3),[1:sim_tick]*dt, com_desired(1:sim_tick,3))
+% legend('DCM', 'VRP des', 'COM')
+% title('Z dir')
+% grid on
 
 % figure()
 % plot([1:sim_tick]*dt, dcm_desired_dot(1:sim_tick,1))
 % legend('dcm dot')
 % title('X dir')
 % grid on
-% 
+
 % figure()
 % plot([1:sim_tick]*dt, dcm_desired_dot(1:sim_tick,2))
 % legend('dcm dot')
