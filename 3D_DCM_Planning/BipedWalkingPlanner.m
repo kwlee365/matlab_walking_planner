@@ -1,5 +1,5 @@
 clc
-% close all
+close all
 clear all
 
 %% 3D DCM Planner
@@ -33,7 +33,7 @@ HT = 2;                    % Heel-To-Toe
 
 %% Planner
 
-bool_ = 2;
+bool_ = 1;
 
 if(or(bool_ == DCDS, bool_ == CDS))
         [vrpRef] = VrpGenerator(dt,sim_tick,step_time,step_length, step_width, h);
