@@ -1,0 +1,56 @@
+clc
+clear all
+close all
+
+%% Parameters
+
+global g h w T
+
+g = 9.81;
+h = 0.75;
+w = sqrt(g/h);
+T = 1/400;  % 400 Hz
+
+%% Reference trajectories
+
+alpha = 0.01;
+beta = 10;
+ux = 0.5;
+
+sim_tick = [0:1:2/T-1]';
+sim_time = sim_tick*T;
+
+for i = 1:1:length(sim_tick)
+    com(1,i)    = alpha*sin(beta*sim_time(i,1)) + 0.02;
+    comdot(1,i) = alpha*beta*cos(beta*sim_time(i,1));
+    cop(1,i)    = com(1,1) + (1/(w*w)) * (alpha*beta^2*sin(beta*sim_time(i,1)));
+end
+
+x = [com; comdot; cop];
+
+%% State estimation
+
+sys = [];
+
+for i = 1:1:length(sim_tick)-1
+    naive_com_sys = NaiveStateEstimator_COM_only(i, x(:,i), sys)
+    naive_com_co = NaiveStateEstimator_COM_COP(i, x(:,i), sys)
+end
+
+Xhat = [sys(1:end).xhat]'
+Yhat = [sys(1:end).yhat]'
+
+%% Figure
+
+figure()
+plot(sim_time, com', sim_time, Xhat(:,1))
+legend('measured', 'estimated')
+title('com pos')
+figure()
+plot(sim_time, comdot', sim_time, Xhat(:,2))
+legend('measured', 'estimated')
+title('com vel')
+figure()
+plot(sim_time, cop', sim_time, Xhat(:,3))
+legend('measured', 'estimated')
+title('cop')
