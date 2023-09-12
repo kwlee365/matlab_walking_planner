@@ -33,7 +33,7 @@ HT = 2;                    % Heel-To-Toe
 
 %% Planner
 
-bool_ = 1;
+bool_ = 0;
 
 if(or(bool_ == DCDS, bool_ == CDS))
         [vrpRef] = VrpGenerator(dt,sim_tick,step_time,step_length, step_width, h);

@@ -1,0 +1,29 @@
+function [cp_cotrolled, zmp_controlled] = CapturePointMPC(iter, w, T, sim_tick, N, step_time, cp_preview, zmp_controlled, A, B, F_xi, F_p, Theta, e1, x_foot_temp, y_foot_temp)
+
+Q = eye(2*N, 2*N);
+R = 0.1 * eye(2*N,2*N);
+
+H = Theta' * R * Theta + F_p' * Q * F_p;
+g = F_p' * Q * (F_xi * cp_preview(1:2, 1) - cp_preview) - Theta' * R * e1* zmp_controlled(1:2,1);
+% cp_preview(1:3, 2) : In the simulation, we have to insert the real CP values.
+% zmp_controlled(1:2,1) : ZMP Control Input of the previous tick.
+
+% ZMP constraints
+Amax = eye(2*N, 2*N);
+bx_max(1:N,1) = + 0.16 + x_foot_temp;
+by_max(1:N,1) = + 0.13 + x_foot_temp;
+
+Amin = [-P_zu zeros(N,N); zeros(N,N) -P_zu];
+bx_min(1:N,k) = + 0.14 - FootRef(:,1); 
+by_min(1:N,k) = + 0.13 - FootRef(:,1);
+
+Aconst = [Amax;
+          Amin];
+bconst(1:4*N,k) = [bx_max(1:N,k);
+                   by_max(1:N,k);
+                   bx_min(1:N,k);
+                   by_min(1:N,k)];
+
+zmp_controlled = quadprog(H,g);
+cp_cotrolled = F_xi * cp_preview(1:2, 1) + F_p * zmp_controlled;
+end
