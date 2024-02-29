@@ -1,11 +1,11 @@
- clc
+clc
 clear all
 close all
 
 %% Ref
 
-% 1. Wieber, Pierre-Brice. "Trajectory free linear model predictive control for stable walking in the presence of strong perturbations." 2006 6th IEEE-RAS International Conference on Humanoid Robots. IEEE, 2006.
-% 2. HerT, Andrei, et al. "Online walking motion generation with automatic footstep placement." Advanced Robotics 24.5-6 (2010): 719-737.
+% min  w1 * ||u||^2 + w2 * ||Z - Z_ref||^2
+% u = CoM jerk
 
 %% Parameter setting
 
@@ -18,18 +18,15 @@ sim_tick = sim_time*hz;
 wn = sqrt(g/h);                 
 
 step_time = 1.0;                % step time
-dsp_time = 0.2;                 % Double support phase
-preview_time = 3*step_time;
+preview_time = 2*step_time;
 N = preview_time*hz;            % 3 step preview
 
-step_length = 0.4;
-step_width = 0.2;
-foot_length_x = 0.3;
-foot_length_y = 0.26;
+step_length = 0.1;
+step_width = 0.1;
 
 %% Reference ZMP
 
-[ZxRef, ZyRef] = ZmpGenerator(T, sim_tick, step_length, step_width);
+[ZxRef, ZyRef, VxRef, VyRef] = ZmpGenerator(T, sim_tick, step_length, step_width, step_time);
 
 %% State space representation
 
@@ -89,25 +86,21 @@ p = zeros(2*N, sim_tick);
 
 for k = 1:1:sim_tick
 
-    if k == 2*hz            
-        y_hat(:,k) = y_hat(:,k) + 0.08;
-    end
-
-    if k == 5*hz            
-        x_hat(:,k) = x_hat(:,k) + 0.1;
+    if k == 4.5*hz            
+            ZyRef(k+(0.5*hz):k+(1.5*hz-1)) = ZyRef(k+(0.5*hz):k+(1.5*hz-1)) - 0.2;
     end
     
-    pk(1:2*N,k) = [w2 * P_zu' * (P_zs*x_hat(1:3,k) - ZxRef((k+1:k+N),:));
-                   w2 * P_zu' * (P_zs*y_hat(1:3,k) - ZyRef((k+1:k+N),:))];
+    pk(1:2*N,k) = [w2 * P_zu' * (P_zs*x_hat(1:3,k) - ZxRef((k+1:k+N),1));
+                   w2 * P_zu' * (P_zs*y_hat(1:3,k) - ZyRef((k+1:k+N),1))];
 
     % ZMP constraints
     Amax = [P_zu zeros(N,N); zeros(N,N) P_zu];
-    bx_max(1:N,k) = + 0.16 + ZxRef((k+1:k+N),:) - P_zs*x_hat(:,k);
-    by_max(1:N,k) = + foot_length_y / 2.0 + ZyRef((k+1:k+N),:) - P_zs*y_hat(:,k);
+    bx_max(1:N,k) = + 0.05 + ZxRef((k+1:k+N),:) - P_zs*x_hat(:,k);
+    by_max(1:N,k) = + 0.05 + ZyRef((k+1:k+N),:) - P_zs*y_hat(:,k);
 
     Amin = [-P_zu zeros(N,N); zeros(N,N) -P_zu];
-    bx_min(1:N,k) = + 0.14 - ZxRef((k+1:k+N),:) + P_zs*x_hat(:,k); % ?
-    by_min(1:N,k) = + foot_length_y / 2.0 - ZyRef((k+1:k+N),:) + P_zs*y_hat(:,k);
+    bx_min(1:N,k) = + 0.05 - ZxRef((k+1:k+N),:) + P_zs*x_hat(:,k); 
+    by_min(1:N,k) = + 0.05 - ZyRef((k+1:k+N),:) + P_zs*y_hat(:,k);
 
     Aconst = [Amax;
               Amin];
@@ -129,8 +122,8 @@ hold on;
 plot(T*[1:sim_tick],ZxRef([1:sim_tick]));
 plot(T*[1:sim_tick],C*x_hat(1:3,[1:sim_tick]));
 plot(T*[1:sim_tick],x_hat(1,[1:sim_tick]));
-plot(T*[1:sim_tick],ZxRef([1:sim_tick])-0.14,'k--');
-plot(T*[1:sim_tick],ZxRef([1:sim_tick])+0.16,'k--');
+plot(T*[1:sim_tick],ZxRef([1:sim_tick])-0.05,'k--');
+plot(T*[1:sim_tick],ZxRef([1:sim_tick])+0.05,'k--');
 title('X')
 legend('ZMP Ref', 'ZMP act', 'CoM','ZMP min', 'ZMP max')
 figure()
@@ -138,7 +131,7 @@ hold on;
 plot(T*[1:sim_tick],ZyRef([1:sim_tick]));
 plot(T*[1:sim_tick],C*y_hat(1:3,[1:sim_tick]));
 plot(T*[1:sim_tick],y_hat(1,[1:sim_tick]));
-plot(T*[1:sim_tick],ZyRef([1:sim_tick])-0.5*foot_length_y,'k--');
-plot(T*[1:sim_tick],ZyRef([1:sim_tick])+0.5*foot_length_y,'k--');
+plot(T*[1:sim_tick],ZyRef([1:sim_tick])-0.05,'k--');
+plot(T*[1:sim_tick],ZyRef([1:sim_tick])+0.05,'k--');
 title('Y')
 legend('ZMP Ref', 'ZMP act', 'CoM','ZMP min', 'ZMP max')

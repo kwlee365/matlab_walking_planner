@@ -54,7 +54,7 @@ for i = 1:1:N
         % (F_p)
         if(i < j)
             F_p(i,j) = 0;
-        else
+        else;
             F_p(i,j) = A^(i-j)*B;
         end
         % (Theta)
@@ -113,6 +113,14 @@ for k=1:1:sim_tick
     % Cost function
 
     H = transpose(Theta) * R * Theta + transpose(F_p) * Q * F_p;
+    
+    if k == 2.5*hz            
+        cp_y_hat(:,k) = cp_y_hat(:,k) + 0.08;
+    end
+
+    if k == 4.5*hz            
+        cp_x_hat(:,k) = cp_x_hat(:,k) + 0.1;
+    end
 
     if k == 1
         gx = transpose(F_p) * Q * (F_xi * cp_x_hat(1, k) - cp_x_ref_mpc(1:N,k)) - transpose(Theta) * R * e1 * p_x_hat(1,k);
@@ -140,25 +148,18 @@ end
 
 %%
 figure()
+hold on
 plot([1:sim_tick], cp_ref(1:sim_tick,1), [1:sim_tick], cp_x_hat(1,1:sim_tick)')
-legend('cp ref', 'cp mpc')
-title('x')
-ylim([-2 10])
-
-figure()
-plot([1:sim_tick], cp_ref(1:sim_tick,2), [1:sim_tick], cp_y_hat(1,1:sim_tick)')
-legend('cp ref', 'cp mpc')
-title('y')
-ylim([-2 2])
-
-figure()
 plot([1:sim_tick], FootRef_x(1:sim_tick,1), [1:sim_tick], px_hat(1,1:sim_tick)')
-legend('p ref', 'p mpc')
+legend('cp ref', 'cp mpc','p ref', 'p mpc')
 title('x')
 ylim([-2 10])
 
+
 figure()
+hold on
+plot([1:sim_tick], cp_ref(1:sim_tick,2), [1:sim_tick], cp_y_hat(1,1:sim_tick)')
 plot([1:sim_tick], FootRef_y(1:sim_tick,1), [1:sim_tick], py_hat(1,1:sim_tick)')
-legend('p ref', 'p mpc')
+legend('cp ref', 'cp mpc','p ref', 'p mpc')
 title('y')
 ylim([-2 2])
