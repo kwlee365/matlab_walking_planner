@@ -101,7 +101,7 @@ current_step_num = 0;
 for k = 1:1:sim_tick
     % Step matrix
     if k == 4.5*hz            
-            ZyRef(k+(0.5*hz):k+(1.5*hz-1)) = ZyRef(k+(0.5*hz):k+(1.5*hz-1)) - 0.2;
+            ZyRef(k+(0.5*hz):k+(1.5*hz-1)) = ZyRef(k+(0.5*hz):k+(1.5*hz-1)) - 0.1;
     end
 
     % Hessian

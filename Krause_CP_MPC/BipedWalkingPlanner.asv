@@ -112,10 +112,10 @@ cp_y_ref_mpc = zeros(N, sim_tick);
 lb_y = zeros(N, sim_tick);
 ub_y = zeros(N, sim_tick);
 
-foot_pnt1 = zeros(2, sim_tick);
-foot_pnt2 = zeros(2, sim_tick);
-foot_pnt3 = zeros(2, sim_tick);
-foot_pnt4 = zeros(2, sim_tick);
+foot_ub_x = zeros(1, sim_tick);
+foot_ub_y = zeros(1, sim_tick);
+foot_lb_x = zeros(1, sim_tick);
+foot_lb_y = zeros(1, sim_tick);
 
 step_cnt = 1;
 for i = 1:1:sim_tick + 1000
@@ -144,11 +144,15 @@ for i = 1:1:sim_tick + 1000
     ub_y(1:N, i) = ZmpRef_y(i:i+N-1, 1) + ub_y_dir(2);
 
     % foot
-    foot_tmp = [ZmpRef_x(i,1); ZmpRef_y(i,1)]
-    foot_pnt1(:, i) = foot_tmp + R * [ 0.17; 0.10]; 
-    foot_pnt2(:, i) = foot_tmp + R * [-0.13; 0.10]; 
-    foot_pnt3(:, i) = foot_tmp + R * [-0.13;-0.10]; 
-    foot_pnt4(:, i) = foot_tmp + R * [ 0.17;-0.10]; 
+    foot_pnt1_dir = R * [ 0.17; 0.10]
+    foot_pnt1_dir =
+    foot_lb_x_dir = 
+    foot_lb_y_dir =
+
+    foot_pnt1_x(:, i) = ZmpRef_x(i,1) + R * [ 0.17; 0.10]; 
+    foot_ub_y(:, i) = ZmpRef_y(i,1) + R * [-0.13; 0.10]; 
+    foot_lb_x(:, i) = ZmpRef_x(i,1) + R * [-0.13;-0.10]; 
+    foot_lb_y(:, i) = ZmpRef_y(i,1) + R * [ 0.17;-0.10]; 
    
    
     if (rem(i, step_tick) == 0)
@@ -174,19 +178,10 @@ R = 0.00001 * eye(N, N);
 step_cnt = 1;
 for k=1:1:sim_tick
 
-
     % Cost function
     if step_cnt > number_of_step + 2
         break
     end
-
-    % if k == 2.5*hz            
-    %     cp_y_hat(:,k) = cp_y_hat(:,k) + 0.08;
-    % end
-    % 
-    % if k == 4.5*hz            
-    %     cp_x_hat(:,k) = cp_x_hat(:,k) + 0.1;
-    % end
 
     H = transpose(Theta) * R * Theta + transpose(F_p) * Q * F_p;
 
@@ -243,8 +238,8 @@ hold on
 plot(ZmpRef_x(1:sim_tick,1), ZmpRef_y(1:sim_tick,1))
 plot(p_x_hat(1,[1:sim_tick])', p_y_hat(1,[1:sim_tick])');
 plot(cp_x_hat(1,1:sim_tick)', cp_y_hat(1,1:sim_tick)')
-% plot(ub_x(1,1:sim_tick), ub_y(1,1:sim_tick), '--k')
-% plot(lb_x(1,1:sim_tick), lb_y(1,1:sim_tick), '--k')
+plot(ub_x(1,1:sim_tick), ub_y(1,1:sim_tick), '--k')
+plot(lb_x(1,1:sim_tick), lb_y(1,1:sim_tick), '--k')
 legend('zmp ref', 'zmp hat', 'cp hat')
 
 plot(fRef(1,:), fRef(2,:),'ro', 'HandleVisibility', 'off')
@@ -254,15 +249,15 @@ union_poly = polyshape();
 for i = 1:1:sim_tick
     
     % i = 605
-    x = [foot_pnt1(1,i), foot_pnt2(1,i), foot_pnt3(1,i), foot_pnt4(1,i)];
-    y = [foot_pnt1(2,i), foot_pnt2(2,i), foot_pnt3(2,i), foot_pnt4(2,i)];
+    x = [ub_x(1,i), ub_x(1,i), lb_x(1,i), lb_x(1,i)];
+    y = [ub_y(1,i), lb_y(1,i), lb_y(1,i), ub_y(1,i)];
     pgon = polyshape(x, y)
-    % plot(pgon, 'FaceColor', 'red', 'FaceAlpha', 0.3, 'EdgeColor', 'black', 'HandleVisibility', 'off');
+    % plot(pgon, 'FaceColor', 'none', 'FaceAlpha', 0.3, 'EdgeColor', 'black', 'HandleVisibility', 'off');
 
     union_poly = union([union_poly, pgon]);
 end
 
-plot(union_poly, 'FaceColor', 'none', 'FaceAlpha', 0.5, 'EdgeColor', 'black', 'HandleVisibility', 'off');
+plot(union_poly, 'FaceColor', 'none', 'FaceAlpha', 1.0, 'EdgeColor', 'black', 'HandleVisibility', 'off');
 
 for i = 1:1:vec_end
   
@@ -272,4 +267,3 @@ for i = 1:1:vec_end
     pgon = polyshape(x, y)
     plot(pgon, 'FaceColor', 'red', 'EdgeColor', 'black', 'HandleVisibility', 'off'); % 여기서 FaceColor와 EdgeColor로 색상 지정
 end
-grid on

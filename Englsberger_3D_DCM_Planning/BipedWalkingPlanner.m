@@ -1,5 +1,5 @@
 clc
-close all
+% close all
 clear all
 
 %% 3D DCM Planner
@@ -44,6 +44,9 @@ else
 end
      
 [com_desired, dcm_desired, vrp_desired, dcm_desired_dot] = DCM_MainPlanner(dt, sim_tick, preview_window, step_time, dsp_time, w, vrpRef, h, bool_);
+
+vrpRef'
+plot(vrpRef)
  
 %% Plot
  
@@ -59,32 +62,32 @@ legend('DCM', 'VRP des', 'COM')
 title('Y dir')
 grid on
 
-figure()
-hold on
-plot(dcm_desired(1:sim_tick,1), dcm_desired(1:sim_tick,2),vrp_desired(1:sim_tick,1),vrp_desired(1:sim_tick,2),com_desired(1:sim_tick,1), com_desired(1:sim_tick,2))
+% figure()
+% hold on
+% plot(dcm_desired(1:sim_tick,1), dcm_desired(1:sim_tick,2),vrp_desired(1:sim_tick,1),vrp_desired(1:sim_tick,2),com_desired(1:sim_tick,1), com_desired(1:sim_tick,2))
 
-total_step = sim_time / step_time;
-for i=1:1:total_step
-    i
-    a = int16(i * step_time * hz) 
-    b = int16((i*step_time - 0.5*dsp_time)*hz) 
-    c = int16((i*step_time + 0.5*dsp_time)*hz) 
-    
-    
-    dcm_eos_x(i,1) = dcm_desired(a,1);
-    dcm_eos_y(i,1) = dcm_desired(a,2);
-    dcm_iniDS_x(i,1) = dcm_desired(b,1);
-    dcm_iniDS_y(i,1) = dcm_desired(b,2);
-    if (i == total_step)
-        break
-    else
-        dcm_eoDS_x(i,1)  = dcm_desired(c,1);
-        dcm_eoDS_y(i,1)  = dcm_desired(c,2);
-    end
-end
-plot(dcm_eos_x,dcm_eos_y,'ro')
-plot(dcm_iniDS_x,dcm_iniDS_y,'bo')
-plot(dcm_eoDS_x,dcm_eoDS_y,'go')
-legend('DCM', 'VRP des', 'COM','eos', 'iniDS', 'eoDS')
-grid on
-hold off
+% total_step = sim_time / step_time;
+% for i=1:1:total_step
+%     i
+%     a = int16(i * step_time * hz) 
+%     b = int16((i*step_time - 0.5*dsp_time)*hz) 
+%     c = int16((i*step_time + 0.5*dsp_time)*hz) 
+% 
+% 
+%     dcm_eos_x(i,1) = dcm_desired(a,1);
+%     dcm_eos_y(i,1) = dcm_desired(a,2);
+%     dcm_iniDS_x(i,1) = dcm_desired(b,1);
+%     dcm_iniDS_y(i,1) = dcm_desired(b,2);
+%     if (i == total_step)
+%         break
+%     else
+%         dcm_eoDS_x(i,1)  = dcm_desired(c,1);
+%         dcm_eoDS_y(i,1)  = dcm_desired(c,2);
+%     end
+% end
+% plot(dcm_eos_x,dcm_eos_y,'ro')
+% plot(dcm_iniDS_x,dcm_iniDS_y,'bo')
+% plot(dcm_eoDS_x,dcm_eoDS_y,'go')
+% legend('DCM', 'VRP des', 'COM','eos', 'iniDS', 'eoDS')
+% grid on
+% hold off

@@ -9,7 +9,7 @@ function [com_desired_, dcm_desired_] = PreviewController(dt,sim_tick,preview_ti
     Ux = 0.0;
     Uy = 0.0;
     
-    for i = 1:1:sim_tick + 500
+    for i = 1:1:sim_tick + 200
         sumGd_px = 0.0;
         sumGd_py = 0.0;
 
