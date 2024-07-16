@@ -3,7 +3,7 @@ function [ZxRef, ZyRef] = ZmpGenerator(dt, sim_tick, pRef, ssp_time, dsp_time, s
     step_cnt = 1;
     step_tick = step_time / dt;
 
-    for i = 1:1:sim_tick + 1000
+    for i = 1:1:sim_tick + 2.0 / dt
 
         if step_cnt > number_of_step + 2
             break

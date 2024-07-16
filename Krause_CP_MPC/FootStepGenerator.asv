@@ -6,26 +6,41 @@ function [pRef, fRef] = FootStepGenerator(number_of_step, step_length, step_widt
 pRef = zeros(3, number_of_step + 3);
 
 y_target   = 0.2;
-yaw_target = deg2rad(10);
+yaw_target = deg2rad(20);
 y_pert     = zeros(number_of_step);
 yaw_pert   = zeros(number_of_step);
 
-for i = 1:1:number_of_step
+% for i = 1:1:number_of_step
+% 
+%     if i <= number_of_step / 2.0
+%         lin_interpol = (i-1) / (number_of_step / 2.0 - 1)
+% 
+%         y_pert(i)    = (1 - lin_interpol) * 0.0 + lin_interpol * 0.0; 
+%         % yaw_pert(i)  = (1 - lin_interpol) * 0.0 + lin_interpol * yaw_target;
+%     else
+%         lin_interpol = (i-(number_of_step / 2.0) - 1) / (number_of_step - number_of_step / 2.0 - 1)
+% 
+%         % y_pert(i)    = (1 - lin_interpol) * 0.0 + lin_interpol * y_target; 
+%         y_pert(i) = y_target;
+%         % yaw_pert(i)  = (1 - lin_interpol) * 0.0 + lin_interpol * -0.0;
+% 
+%     end
+% end
+% 
 
-    if i <= number_of_step / 2.0
-        lin_interpol = (i-1) / (number_of_step / 2.0 - 1)
+yaw_pert(5)  = yaw_target;
 
-        y_pert(i)    = (1 - lin_interpol) * 0.0 + lin_interpol * y_target; 
-        yaw_pert(i)  = (1 - lin_interpol) * 0.0 + lin_interpol * yaw_target;
-    else
-        lin_interpol = (i-(number_of_step / 2.0)) / (number_of_step - number_of_step / 2.0 - )
+yaw_pert(6)  = yaw_target;
 
-        y_pert(i)    = (1 - lin_interpol) * 0.0 + lin_interpol * -y_target; 
-        yaw_pert(i)  = (1 - lin_interpol) * 0.0 + lin_interpol * -yaw_target;
-        
-    end
-end
+yaw_pert(7)  = yaw_target;
 
+yaw_pert(8)  = yaw_target;
+
+y_pert(9)  = 3 * y_target;
+
+y_pert(10)  = 4 * y_target;
+
+y_pert(11)  = 5 * y_target;
 
 % figure()
 % plot(y_pert)

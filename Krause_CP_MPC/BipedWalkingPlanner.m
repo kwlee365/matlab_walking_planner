@@ -8,7 +8,7 @@ clear all
 % IFAC Proceedings Volumes 45.22 (2012): 165-171.
 
 % Parameters
-T = 0.01;                     % [s] : sampling time
+T = 0.005;                     % [s] : sampling time
 hz = 1/T;
 h = 0.75;                       % Desired com height
 g = 9.81;                       % gravity acceleration
@@ -62,7 +62,7 @@ end
 % plot(ZmpRef_x, ZmpRef_y)
 
 zmp_vec_end = length(ZmpRef_x)
-for i = 1:1:500
+for i = 1:1:5/T
     ZmpRef_x(zmp_vec_end+i) = ZmpRef_x(zmp_vec_end);
     ZmpRef_y(zmp_vec_end+i) = ZmpRef_y(zmp_vec_end);
 end
